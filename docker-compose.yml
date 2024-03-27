@@ -1,4 +1,3 @@
-version: "3"
 services:
   database:
     image: postgis/postgis:13-master
@@ -42,11 +41,14 @@ services:
       ADMIN_EMAIL: "admin@example.com"
       ADMIN_PASSWORD: "d1r3ctu5"
 
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "*"
+
       WEBSOCKETS_ENABLED: "true"
 
       # Make sure to set this in production
       # (see https://docs.directus.io/self-hosted/config-options#general)
-      # PUBLIC_URL: "https://directus.example.com"
+      PUBLIC_URL: "http://localhost:8055"
 
     # Environment variables can also be defined in a file (for example `.env`):
     # env_file:

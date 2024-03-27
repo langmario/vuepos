@@ -1,1 +1,0 @@
-<template>Create order</template>
