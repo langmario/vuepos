@@ -1,25 +1,47 @@
 <script lang="ts" setup>
-import AppHeader from '@/components/AppHeader.vue';
+import { directus, type OrderItem } from '@/api/directus';
+import { orderItemCompareFn } from '@/util';
+import { onMounted } from 'vue';
 import { RouterLink, RouterView, useRouter } from 'vue-router/auto';
-import { directus } from '@/api/directus';
 
-const token = await directus.getToken()
-if (token === null) {
-    await useRouter().replace('/login')
-}
+import IconAdd from '~icons/carbon/add-alt';
+import IconList from '~icons/carbon/list-boxes';
+import IconPay from '~icons/carbon/money';
+
+const router = useRouter();
+
+onMounted(async () => {
+    const { subscription } = await directus.subscribe('order_items', {
+        event: 'update',
+        query: { filter: { user_created: { _eq: '$CURRENT_USER' }, status: { _eq: 'ready-for-serving' } } },
+    });
+
+    for await (const item of subscription) {
+        if (item.event === 'update') {
+            navigator.vibrate(1000);
+        }
+    }
+});
 </script>
 
 <template>
-    <AppHeader />
-    <main class="container mx-auto px-4 overflow-hidden">
-        <Suspense>
-            <RouterView />
-            <template #fallback>Loading...</template>
-        </Suspense>
-    </main>
-    <nav class="border grid grid-flow-col auto-cols-fr text-center">
-        <RouterLink class="py-4" to="/my-orders">MyOrders</RouterLink>
-        <RouterLink class="py-4" to="/create-order">Create Order</RouterLink>
-        <RouterLink class="py-4" to="/tables">Tables</RouterLink>
-    </nav>
+    <div class="h-full grid grid-rows-[1fr_auto]">
+        <main class="overflow-hidden">
+            <Suspense>
+                <RouterView />
+                <template #fallback>Loading...</template>
+            </Suspense>
+        </main>
+        <nav class="border grid grid-flow-col auto-cols-fr bg-slate-700 text-white">
+            <RouterLink class="flex justify-center items-center p-3" to="/my-orders">
+                <IconList font-size="1.4em" />
+            </RouterLink>
+            <RouterLink class="flex justify-center items-center p-3" to="/create-order">
+                <IconAdd font-size="1.4em" />
+            </RouterLink>
+            <RouterLink class="flex justify-center items-center p-3" to="/checkout">
+                <IconPay font-size="1.4em" />
+            </RouterLink>
+        </nav>
+    </div>
 </template>

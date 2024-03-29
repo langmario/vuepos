@@ -10,9 +10,6 @@ services:
       POSTGRES_PASSWORD: "directus"
       POSTGRES_DB: "directus"
 
-  cache:
-    image: redis:6
-
   directus:
     image: directus/directus:10.10.4
     ports:
@@ -21,7 +18,6 @@ services:
       - ./uploads:/directus/uploads
       - ./extensions:/directus/extensions
     depends_on:
-      - cache
       - database
     environment:
       KEY: "255d861b-5ea1-5996-9aa3-922530ec40b1"
@@ -33,10 +29,6 @@ services:
       DB_DATABASE: "directus"
       DB_USER: "directus"
       DB_PASSWORD: "directus"
-
-      CACHE_ENABLED: "true"
-      CACHE_STORE: "redis"
-      REDIS: "redis://cache:6379"
 
       ADMIN_EMAIL: "admin@example.com"
       ADMIN_PASSWORD: "d1r3ctu5"
