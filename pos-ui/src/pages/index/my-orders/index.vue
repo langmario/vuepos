@@ -48,7 +48,7 @@ onMounted(async () => {
                         v-for="order in (items as Orders)"
                         :key="order.id"
                         :to="{ name: '//my-orders/[id]', params: { id: order.id } }"
-                        class="py-4 flex items-start gap-4"
+                        class="py-4 flex items-start gap-2"
                     >
                         <div class="flex flex-col items-center text-center gap-1">
                             <div class="text-sm leading-none">Tisch</div>
@@ -66,7 +66,7 @@ onMounted(async () => {
                                     <Column field="product.name"></Column>
                                     <Column field="status" body-class="w-0">
                                         <template #body="{ data }">
-                                            <StatusTag :status="data.status" class="-my-1 -mr-2" />
+                                            <StatusTag :status="data.status" />
                                         </template>
                                     </Column>
                                 </DataTable>
