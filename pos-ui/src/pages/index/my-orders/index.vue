@@ -10,7 +10,7 @@ import Button from 'primevue/button';
 import DataView from 'primevue/dataview';
 import DataViewLayoutOptions from 'primevue/dataviewlayoutoptions';
 import { format } from 'date-fns';
-import { getStatusLabel, getStatusSeverity, orderItemCompareFn } from '@/util.ts';
+import { getStatusLabel, getStatusSeverity, orderItemCompareFn } from '@/util';
 import StatusTag from '@/components/StatusTag.vue';
 import { useSessionStorage } from '@vueuse/core';
 
@@ -27,7 +27,7 @@ async function getOrders() {
 type Orders = Awaited<ReturnType<typeof getOrders>>;
 
 const orders = ref<Orders>();
-const layout = useSessionStorage('order-items-layout', 'list');
+const layout = useSessionStorage<'list' | 'grid'>('order-items-layout', 'list');
 
 onMounted(async () => {
     orders.value = await getOrders();
@@ -36,7 +36,7 @@ onMounted(async () => {
 
 <template>
     <div class="p-2 pb-8 overflow-auto h-full" v-if="orders">
-        <DataView :value="orders">
+        <DataView :value="orders" data-key="id">
             <template #header>
                 <div class="flex justify-end">
                     <DataViewLayoutOptions v-model="layout" />
@@ -58,6 +58,7 @@ onMounted(async () => {
                         <DataView
                             :value="(order.items as OrderItem[]).sort(orderItemCompareFn)"
                             :layout="layout"
+                            data-key="id"
                             class="w-full"
                         >
                             <template #list="{ items }">

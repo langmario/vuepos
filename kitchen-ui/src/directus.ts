@@ -1,28 +1,7 @@
-import {
-    createDirectus,
-    rest,
-    authentication,
-    realtime,
-    type AuthenticationStorage,
-    type AuthenticationData,
-    type DirectusUser,
-} from '@directus/sdk';
+import { createDirectus, rest, staticToken, realtime, type DirectusUser } from '@directus/sdk';
 
-const { VITE_DIRECTUS_HOST } = import.meta.env;
-
-class AuthStorage implements AuthenticationStorage {
-    get() {
-        return JSON.parse(sessionStorage.getItem('auth')!) as AuthenticationData;
-    }
-    set(data: AuthenticationData | null) {
-        sessionStorage.setItem('auth', JSON.stringify(data));
-    }
-}
-
-const authStorage = new AuthStorage();
-
-export const directus = createDirectus<Schema>(VITE_DIRECTUS_HOST)
-    .with(authentication('json', { storage: authStorage }))
+export const directus = createDirectus<Schema>(import.meta.env.VITE_DIRECTUS_HOST)
+    .with(staticToken(import.meta.env.VITE_DIRECTUS_TOKEN))
     .with(rest())
     .with(realtime());
 
@@ -57,6 +36,7 @@ export interface Product {
     ingredient: string | Ingredient | null;
     ingredient_quantity: number | null;
     sort: number | null;
+    is_selfservice: boolean;
 }
 
 export interface OrderItem {

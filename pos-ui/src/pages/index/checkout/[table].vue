@@ -9,7 +9,7 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import StatusTag from '@/components/StatusTag.vue';
 
-const route = useRoute('//tables/[table]');
+const route = useRoute('//checkout/[table]');
 
 async function getOrderItems(table: string) {
     return await directus.request(
@@ -111,7 +111,7 @@ onMounted(async () => {
             :row-class="(data) => ({ 'line-through': data.status === 'paid', 'opacity-50': data.status === 'paid' })"
         >
             <template #empty>
-                <div class="text-center opacity-50">
+                <div class="text-center opacity-50 text-sm">
                     <p>Keine abrechenbare Bestellungen für Tisch {{ route.params.table }}</p>
                     <p>Sind die Produkte 'serviert'?</p>
                 </div>

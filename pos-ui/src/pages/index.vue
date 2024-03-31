@@ -11,6 +11,7 @@ import IconPay from '~icons/carbon/money';
 const router = useRouter();
 
 onMounted(async () => {
+    await directus.connect();
     const { subscription } = await directus.subscribe('order_items', {
         event: 'update',
         query: { filter: { user_created: { _eq: '$CURRENT_USER' }, status: { _eq: 'ready-for-serving' } } },
